@@ -15,5 +15,8 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///../application.db'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # set socketio
-ENABLE_SOCKETIO = False
+ENABLE_SOCKETIO = True
 SOCKETIO_ASYNC_MODE = 'threading'
+
+# set scheduler
+ENABLE_SCHEDULER = False

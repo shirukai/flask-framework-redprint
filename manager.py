@@ -14,13 +14,12 @@ manager = Manager(app)
 
 
 @manager.command
-def runserver(host=None, port=None, socket=None):
+def runserver(host=None, port=None):
     if not host:
         host = setting.FLASK_SERVER_HOST
     if not port:
         port = setting.FLASK_SERVER_PORT
-    if (not socket and setting.ENABLE_SOCKETIO) or socket:
-        socketio.init_app(app=app, async_mode=setting.SOCKETIO_ASYNC_MODE)
+    if setting.ENABLE_SOCKETIO:
         socketio.run(app, host=host, port=port, debug=setting.FLASK_DEBUG)
     else:
         app.run(host, port, debug=setting.FLASK_DEBUG)

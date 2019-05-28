@@ -10,6 +10,8 @@ import os
 from flask import Flask, render_template
 from werkzeug.exceptions import HTTPException
 
+from application.apsheduler import scheduler
+from application.config.scheduler import SchedulerConfig
 from application.database import db
 from application.libs.error import APIException
 from application.libs.ok import api_success_handler
@@ -46,6 +48,16 @@ def initialize_app(flask_app):
 
     # init db
     db.init_app(flask_app)
+
+    # init socket
+    if setting.ENABLE_SOCKETIO:
+        socketio.init_app(app=flask_app, async_mode=setting.SOCKETIO_ASYNC_MODE)
+
+    # init scheduler
+    if setting.ENABLE_SCHEDULER:
+        flask_app.config.from_object(SchedulerConfig)
+        scheduler.init_app(app=flask_app)
+        scheduler.start()
 
 
 initialize_app(app)
