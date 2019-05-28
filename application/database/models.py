@@ -3,6 +3,11 @@
 @author : shirukai
 @date : 2019-05-27 17:38
 数据库表模型
+提供三张表模型：用户表、博客表、标签表
+
+用户与博客为一对多关系
+博客与标签为多多多关系
+关于模型声明参考：http://docs.jinkan.org/docs/flask-sqlalchemy/models.html
 """
 import uuid
 from datetime import datetime
