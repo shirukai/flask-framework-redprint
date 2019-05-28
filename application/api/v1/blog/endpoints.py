@@ -17,13 +17,13 @@ api = RedPrint("blog")
 @api.route("", methods=['POST'])
 def post_blog():
     data = request.get_json()
-    return jsonify(business.create_blog(data['title'], data['context'], data['user_id']))
+    return jsonify(business.create_blog(data['title'], data['context'], data['user_id'], data['tags']))
 
 
 @api.route("/<blog_id>", methods=['PUT'])
 def put_blog(blog_id):
     data = request.get_json()
-    return jsonify(business.update_user(blog_id, data['title'], data['context']))
+    return jsonify(business.update_blog(blog_id, data['title'], data['context'],data['tags']))
 
 
 @api.route("", methods=['GET'])
@@ -37,5 +37,5 @@ def get_blog(blog_id):
 
 
 @api.route("/<blog_id>", methods=['DELETE'])
-def delete_post(blog_id):
+def delete_blog(blog_id):
     return jsonify(business.delete_blog_by_id(blog_id))

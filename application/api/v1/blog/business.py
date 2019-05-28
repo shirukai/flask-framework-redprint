@@ -9,10 +9,11 @@ from datetime import datetime
 from pytz import timezone
 
 from application import APIException, db
-from application.database.models import Blog
+from application.api.v1.tag.business import get_tag_by_id
+from application.database.models import Blog, Tag
 
 
-def get_blog_by_id(id, ):
+def get_blog_by_id(id):
     blog = Blog.query.filter(Blog.id == id).one_or_none()
     if blog:
         return blog
@@ -24,8 +25,11 @@ def get_blogs():
     return [blog.dict() for blog in Blog.query.all()]
 
 
-def create_blog(title, context, user_id):
+def create_blog(title, context, user_id, tags):
     blog = Blog(title=title, context=context, user_id=user_id)
+    for tag_id in tags:
+        tag = get_tag_by_id(tag_id)
+        blog.tags.append(tag)
     db.session.add(blog)
     db.session.commit()
     return blog.dict()
@@ -38,11 +42,14 @@ def delete_blog_by_id(id):
     return "successfully deleted."
 
 
-def update_user(id, title, context):
+def update_blog(id, title, context,tags):
     blog = get_blog_by_id(id)
     blog.title = title
     blog.context = context
     blog.modify_time = datetime.now(timezone('Asia/Shanghai')).replace(tzinfo=None)
+    for tag_id in tags:
+        tag = get_tag_by_id(tag_id)
+        blog.tags.append(tag)
     db.session.add(blog)
     db.session.commit()
     return blog.dict()

@@ -28,12 +28,12 @@ def put_user(user_id):
 
 @api.route("", methods=['GET'])
 def get_users():
-    return jsonify(business.get_users().dict())
+    return jsonify(business.get_users())
 
 
 @api.route("/<user_id>", methods=['GET'])
 def get_user(user_id):
-    return jsonify(business.get_user_by_id(user_id))
+    return jsonify(business.get_user_by_id(user_id).dict())
 
 
 @api.route("/<user_id>", methods=['DELETE'])
@@ -43,4 +43,4 @@ def delete_user(user_id):
 
 @api.route("/<user_id>/blogs")
 def get_user_posts(user_id):
-    return jsonify(business.get_user_by_id(user_id, select_blogs=True))
+    return jsonify(business.get_user_by_id(user_id).dict(select_blog=True))

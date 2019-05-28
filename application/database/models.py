@@ -10,6 +10,11 @@ from pytz import timezone
 
 from application import db
 
+tags = db.Table('tags',
+                db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
+                db.Column('blog_id', db.Integer, db.ForeignKey('blog.id'))
+                )
+
 
 class User(db.Model):
     id = db.Column(db.String(80), primary_key=True)
@@ -43,6 +48,9 @@ class Blog(db.Model):
     id = db.Column(db.String(80), primary_key=True)
     title = db.Column(db.String(120), nullable=False)
     context = db.Column(db.Text)
+    tags = db.relationship('Tag',
+                           secondary=tags,
+                           backref=db.backref('pages', lazy='dynamic'))
     create_time = db.Column(db.DateTime)
     modify_time = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -59,10 +67,35 @@ class Blog(db.Model):
             'id': self.id,
             'title': self.title,
             'context': self.context,
-            'user': self.User.dict(),
+            'owner': self.User.dict(),
+            'tags': [tag.dict() for tag in self.tags],
             'create_time': format_time(self.create_time),
             'modify_time': format_time(self.modify_time)
         }
+
+    def __repr__(self):
+        return 'Blog %r' % self.title
+
+
+class Tag(db.Model):
+    id = db.Column(db.String(80), primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+
+    def __init__(self, name):
+        self.id = str(uuid.uuid1())
+        self.name = name
+
+    def dict(self, select_blog=False):
+        tag = {
+            'id': self.id,
+            'name': self.name
+        }
+        if select_blog:
+            tag['blogs'] = []
+        return tag
+
+    def __repr__(self):
+        return 'Tag %r' % self.name
 
 
 def format_time(time, fmt="%Y-%m-%d %H:%M:%S"):

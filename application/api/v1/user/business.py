@@ -12,7 +12,7 @@ from application import db, APIException
 from application.database.models import User
 
 
-def get_user_by_id(id, select_blogs=False, ):
+def get_user_by_id(id):
     user = User.query.filter(User.id == id).one_or_none()
     if user:
         return user
@@ -33,6 +33,7 @@ def create_user(name, role):
 
 def delete_user_by_id(id):
     user = get_user_by_id(id)
+    user.blogs.delete()
     db.session.delete(user)
     db.session.commit()
     return "successfully deleted."
