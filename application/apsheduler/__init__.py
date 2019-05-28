@@ -8,4 +8,7 @@ from application.config import setting
 
 if setting.ENABLE_SCHEDULER:
     from flask_apscheduler import APScheduler
+
     scheduler = APScheduler()
+else:
+    scheduler = None

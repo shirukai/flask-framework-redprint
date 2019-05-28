@@ -10,3 +10,5 @@ if setting.ENABLE_SOCKETIO:
     from flask_socketio import SocketIO
 
     socketio = SocketIO()
+else:
+    socketio = None
