@@ -15,13 +15,10 @@ def api_success_handler(res=None):
             content_type = 'application/json'
             if res.content_type == content_type:
                 data = json.loads(res.data)
-            else:
-                data = res.data
-                res.headers['Content-Type'] = content_type
-            result = dict(
-                code=0,
-                status='succeed',
-                data=data
-            )
-            res.set_data(json.dumps(result))
+                res.set_data(json.dumps({
+                    'code': 0,
+                    'status': 'succeed',
+                    'data': data
+
+                }))
     return res
